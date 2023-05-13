@@ -64,17 +64,22 @@ class _HomepageState extends State<Homepage> {
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
-      decoration:  BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8)
-      ),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8)),
       child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(todo['time'], style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red ),),
+                Text(
+                  todo['time'],
+                  style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red),
+                ),
                 Text(
                   'Teks: ${todo['text']}',
                 ),
@@ -83,46 +88,34 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           GestureDetector(
-           onTap: () {
-             reference.child(todo['key']).remove();
-             firebaseDatabase.ref().child(timeinput.text).remove();
-           },
-           child: Row(
-             children: [
-               Icon(
-                 Icons.delete,
-                 color: Colors.red[700],
-               ),
-             ],
-           ),
-              )
+            onTap: () {
+              reference.child(todo['key']).remove();
+              firebaseDatabase.ref().child(todo['time']).remove();
+            },
+            child: Row(
+              children: [
+                Icon(
+                  Icons.delete,
+                  color: Colors.red[700],
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
-  _buildValue(Map todo){
-    if (todo['sound'] == '1'){
-      return  const Text(
-        'Sound: Sarapan pagi.mp3'
-      );
-    }
-    else if (todo['sound'] == '2'){
-      return  const Text(
-          'Sound: Apel pagi.mp3'
-      );
-    }
-    else if (todo['sound'] == '3'){
-      return  const Text(
-          'Sound: Olahraga pagi.mp3'
-      );
-    }
-    else if (todo['sound'] == '4'){
-      return  const Text(
-          'Sound: Kegiatan Belajar.mp3'
-      );
-    }
-    else {
+  _buildValue(Map todo) {
+    if (todo['sound'] == '1') {
+      return const Text('Sound: Sarapan pagi.mp3');
+    } else if (todo['sound'] == '2') {
+      return const Text('Sound: Apel pagi.mp3');
+    } else if (todo['sound'] == '3') {
+      return const Text('Sound: Olahraga pagi.mp3');
+    } else if (todo['sound'] == '4') {
+      return const Text('Sound: Kegiatan Belajar.mp3');
+    } else {
       return const Text('Sound: -');
     }
   }
@@ -176,8 +169,7 @@ class _HomepageState extends State<Homepage> {
                         setState(() {
                           timeinput.text = getTime;
                         });
-                      } else {
-                      }
+                      } else {}
                     },
                     child: const Text('Set Waktu')),
               ),
@@ -257,7 +249,7 @@ class _HomepageState extends State<Homepage> {
                       text.text = '';
                       timeinput.text = '';
                       const snackbar = SnackBar(
-                          content: Text('Jadwal berhasil disimpan'),
+                        content: Text('Jadwal berhasil disimpan'),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackbar);
                     },
