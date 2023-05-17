@@ -21,9 +21,11 @@ class _HomepageState extends State<Homepage> {
   TextEditingController timeinput = TextEditingController();
   TextEditingController text = TextEditingController();
   TextEditingController sound = TextEditingController();
+  TextEditingController storage = TextEditingController();
   late DatabaseReference dbRef2;
 
   Map<String, dynamic>? selectedJson;
+  Map<String, dynamic>? selectedJson2;
   var l;
   var g;
   var k;
@@ -43,20 +45,69 @@ class _HomepageState extends State<Homepage> {
       'id': "0",
     },
     {
-      'name': 'Sarapan pagi.mp3',
+      'name': 'Olahraga Pagi.mp3',
       'id': "1",
     },
     {
-      'name': 'Apel pagi.mp3',
+      'name': 'Bersih-bersih.mp3',
       'id': "2",
     },
     {
-      'name': 'Olahraga pagi.mp3',
+      'name': 'Makan pagi.mp3',
       'id': "3",
     },
     {
-      'name': 'Kegiatan Belajar.mp3',
-      'id': "3",
+      'name': 'Kegiatan Apel Pagi.mp3',
+      'id': "4",
+    },
+    {
+      'name': 'Kegiatan Belajar Mengajar.mp3',
+      'id': "5",
+    },
+    {
+      'name': 'Kegiatan Ekstrakurikuler.mp3',
+      'id': "6",
+    },
+    {
+      'name': 'Kegiatan Belajar Malam.mp3',
+      'id': "7",
+    },
+    {
+      'name': 'Kegiatan Apel Malam.mp3',
+      'id': "8",
+    },
+  ];
+
+  final List<Map<String, dynamic>> storages = [
+    {
+      'storage': '1',
+    },
+    {
+      'storage': '2',
+    },
+    {
+      'storage': '3',
+    },
+    {
+      'storage': '4',
+    },
+    {
+      'storage': '5',
+    },
+    {
+      'storage': '6',
+    },
+    {
+      'storage': '7',
+    },
+    {
+      'storage': '8',
+    },
+    {
+      'storage': '9',
+    },
+    {
+      'storage': '10',
     },
   ];
 
@@ -84,13 +135,14 @@ class _HomepageState extends State<Homepage> {
                   'Teks: ${todo['text']}',
                 ),
                 _buildValue(todo),
+                Text('Storage: ${todo['storage']}')
               ],
             ),
           ),
           GestureDetector(
             onTap: () {
               reference.child(todo['key']).remove();
-              firebaseDatabase.ref().child(todo['time']).remove();
+              firebaseDatabase.ref().child(todo['storage']).remove();
             },
             child: Row(
               children: [
@@ -120,6 +172,7 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+// main widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,6 +283,40 @@ class _HomepageState extends State<Homepage> {
                 )),
               ),
               const SizedBox(
+                height: 16,
+              ),
+              const Text(
+                'Pilih Penyimpanan',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<Map<String, dynamic>>(
+                  hint: const Text('Penyimpanan'),
+                  value: selectedJson2,
+                  items: storages.map((json) {
+                    return DropdownMenuItem<Map<String, dynamic>>(
+                      value: json,
+                      child: Text(json['storage']),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedJson2 = value;
+                      storage.text = value!['storage'];
+                    });
+                  },
+                )),
+              ),
+              const SizedBox(
                 height: 24,
               ),
               SizedBox(
@@ -239,12 +326,14 @@ class _HomepageState extends State<Homepage> {
                       Map<String, String> todo = {
                         'text': text.text,
                         'sound': sound.text,
-                        'time': timeinput.text
+                        'time': timeinput.text,
+                        'storage': storage.text
                       };
                       dbRef2.push().set(todo);
-                      firebaseDatabase.ref().child(timeinput.text).set({
+                      firebaseDatabase.ref().child(storage.text).set({
                         "text": text.text,
                         "sound": sound.text,
+                        "jam": timeinput.text,
                       }).asStream();
                       text.text = '';
                       timeinput.text = '';
