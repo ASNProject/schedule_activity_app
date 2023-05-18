@@ -2,6 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:schedule_activity_app/utils/list_sound.dart';
+import 'package:schedule_activity_app/utils/list_storage.dart';
 
 class Homepage extends StatefulWidget {
   final String title;
@@ -16,22 +18,35 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final firebaseDatabase = FirebaseDatabase.instance;
+
+  /// Membuat Query untuk memanggil child "todo" di Firebase
   Query dbRef = FirebaseDatabase.instance.ref().child('todo');
   DatabaseReference reference = FirebaseDatabase.instance.ref().child('/todo');
+
+  /// Membuat text controller untuk menyimpan hasil inputan dari text input
   TextEditingController timeinput = TextEditingController();
   TextEditingController text = TextEditingController();
   TextEditingController sound = TextEditingController();
   TextEditingController storage = TextEditingController();
+
+  /// Inisialisasi DatabaseReference
   late DatabaseReference dbRef2;
 
+  /// Membuat variable Map
   Map<String, dynamic>? selectedJson;
   Map<String, dynamic>? selectedJson2;
+
+  /// Membuat varibale
   var l;
   var g;
   var k;
   var l2;
   var g2;
   var k2;
+
+  bool _validate = false;
+
+  /// Melakukan initial state saat pertama kali aplikasi dijalankan
   @override
   void initState() {
     timeinput.text = "00:00";
@@ -39,78 +54,13 @@ class _HomepageState extends State<Homepage> {
     dbRef2 = FirebaseDatabase.instance.ref().child('todo');
   }
 
-  final List<Map<String, dynamic>> sounds = [
-    {
-      'name': 'Pilih sound',
-      'id': "0",
-    },
-    {
-      'name': 'Olahraga Pagi.mp3',
-      'id': "1",
-    },
-    {
-      'name': 'Bersih-bersih.mp3',
-      'id': "2",
-    },
-    {
-      'name': 'Makan pagi.mp3',
-      'id': "3",
-    },
-    {
-      'name': 'Kegiatan Apel Pagi.mp3',
-      'id': "4",
-    },
-    {
-      'name': 'Kegiatan Belajar Mengajar.mp3',
-      'id': "5",
-    },
-    {
-      'name': 'Kegiatan Ekstrakurikuler.mp3',
-      'id': "6",
-    },
-    {
-      'name': 'Kegiatan Belajar Malam.mp3',
-      'id': "7",
-    },
-    {
-      'name': 'Kegiatan Apel Malam.mp3',
-      'id': "8",
-    },
-  ];
+  @override
+  void dispose() {
+    text.dispose();
+    super.dispose();
+  }
 
-  final List<Map<String, dynamic>> storages = [
-    {
-      'storage': '1',
-    },
-    {
-      'storage': '2',
-    },
-    {
-      'storage': '3',
-    },
-    {
-      'storage': '4',
-    },
-    {
-      'storage': '5',
-    },
-    {
-      'storage': '6',
-    },
-    {
-      'storage': '7',
-    },
-    {
-      'storage': '8',
-    },
-    {
-      'storage': '9',
-    },
-    {
-      'storage': '10',
-    },
-  ];
-
+  /// Menampilkan list daftar kegiatan yang sudah ditambahkan ke database
   Widget listItem({required Map todo}) {
     return Container(
       margin: const EdgeInsets.all(10),
@@ -160,19 +110,27 @@ class _HomepageState extends State<Homepage> {
 
   _buildValue(Map todo) {
     if (todo['sound'] == '1') {
-      return const Text('Sound: Sarapan pagi.mp3');
-    } else if (todo['sound'] == '2') {
-      return const Text('Sound: Apel pagi.mp3');
-    } else if (todo['sound'] == '3') {
       return const Text('Sound: Olahraga pagi.mp3');
+    } else if (todo['sound'] == '2') {
+      return const Text('Sound: Bersih - bersih.mp3');
+    } else if (todo['sound'] == '3') {
+      return const Text('Sound: Makan pagi.mp3');
     } else if (todo['sound'] == '4') {
-      return const Text('Sound: Kegiatan Belajar.mp3');
+      return const Text('Sound: Kegiatan apel pagi.mp3');
+    } else if (todo['sound'] == '5') {
+      return const Text('Sound: Kegiatan belajar mengajar.mp3');
+    } else if (todo['sound'] == '6') {
+      return const Text('Sound: Kegiatan ekstrakurikuler.mp3');
+    } else if (todo['sound'] == '7') {
+      return const Text('Sound: Kegiatan belajar malam.mp3');
+    } else if (todo['sound'] == '8') {
+      return const Text('Sound: Kegiatan apel malam.mp3');
     } else {
       return const Text('Sound: -');
     }
   }
 
-// main widget
+  /// Main Widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
